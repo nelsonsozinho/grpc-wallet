@@ -2,6 +2,7 @@ package com.shire42.customer.controller;
 
 import com.shire42.customer.controller.rest.CustomerRest;
 import com.shire42.customer.exception.CustomerAlreadyExistsException;
+import com.shire42.customer.exception.CustomerNotFoundException;
 import com.shire42.customer.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +35,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerRest> getCustomerById(@PathVariable("id") String id) {
+    public ResponseEntity<CustomerRest> getCustomerById(@PathVariable("id") String id) throws CustomerNotFoundException {
         return ResponseEntity.ok(customerService.findCustomerById(id));
     }
 

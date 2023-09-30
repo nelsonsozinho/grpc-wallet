@@ -18,4 +18,9 @@ public class GlobalExceptionHandler {
                 new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Map<String, List<String>>> handleValidateErrors(CustomerNotFoundException ex) {
+        return new ResponseEntity<>(Map.of("errors", List.of(ex.getMessage())) , new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
 }

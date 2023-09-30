@@ -2,12 +2,14 @@ package com.shire42.customer.service;
 
 import com.shire42.customer.controller.rest.CustomerRest;
 import com.shire42.customer.exception.CustomerAlreadyExistsException;
+import com.shire42.customer.exception.CustomerNotFoundException;
 import com.shire42.customer.model.Customer;
 import com.shire42.customer.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -34,8 +36,13 @@ public class CustomerService {
         return customerRest;
     }
 
-    public CustomerRest findCustomerById(String id) {
+    public CustomerRest findCustomerById(String id) throws CustomerNotFoundException {
         final Customer customer = customerRepository.getById(id);
+
+        if(Objects.isNull(customer)) {
+            throw new CustomerNotFoundException("Customer with id " + id + " was not found");
+        }
+
         return CustomerRest.builder()
                 .name(customer.getName())
                 .email(customer.getEmail())
