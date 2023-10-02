@@ -1,10 +1,12 @@
 package com.shire42.wallet.controller.rest;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
+@Builder
 public class CardRest {
 
     private UUID id;

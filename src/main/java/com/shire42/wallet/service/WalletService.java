@@ -1,5 +1,6 @@
 package com.shire42.wallet.service;
 
+import com.shire42.wallet.controller.rest.CardRest;
 import com.shire42.wallet.controller.rest.WalletRest;
 import com.shire42.wallet.exception.WalletAlreadyExistsException;
 import com.shire42.wallet.exception.WalletNotFoundException;
@@ -47,7 +48,25 @@ public class WalletService {
     }
 
     public WalletRest findWalletById(String id) throws WalletNotFoundException {
-        return null;
+        final Wallet wallet = customerRepository.getById(id);
+        return WalletRest.builder()
+                .walletName(wallet.getWalletName())
+                .cash(wallet.getCash())
+                .customerId(wallet.getCustomerId())
+                .description(wallet.getDescription())
+                .walletName(wallet.getWalletName())
+                .id(UUID.fromString(wallet.getId()))
+                .cards(
+                        wallet.getCards().stream().map(c -> CardRest.builder()
+                                .number(c.getNumber())
+                                .expire(c.getExpire())
+                                .holderName(c.getHolderName())
+                                .cvc(c.getCvc())
+                                .id(UUID.fromString(c.getId()))
+                                .build()
+                        ).toList()
+                )
+                .build();
     }
 
 }

@@ -2,12 +2,15 @@ package com.shire42.wallet.controller;
 
 import com.shire42.wallet.controller.rest.WalletRest;
 import com.shire42.wallet.exception.WalletAlreadyExistsException;
+import com.shire42.wallet.exception.WalletNotFoundException;
 import com.shire42.wallet.service.WalletService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,11 @@ public class WalletController {
         final WalletRest walletRestResponse = walletService.createNewWallet(walletRest);
         responseHeaders.add("Location", "/wallet/"+walletRestResponse.getId());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<WalletRest> getWalletById(@PathVariable("id") String id) throws WalletNotFoundException {
+        return ResponseEntity.ok(walletService.findWalletById(id));
     }
 
 }
