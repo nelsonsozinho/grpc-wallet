@@ -1,1 +1,1 @@
-rootProject.name = "customer"
+rootProject.name = "wallet"

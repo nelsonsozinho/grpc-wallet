@@ -1,4 +1,4 @@
-package com.shire42.customer;
+package com.shire42.wallet;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
