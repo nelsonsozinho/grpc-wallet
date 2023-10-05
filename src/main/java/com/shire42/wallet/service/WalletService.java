@@ -19,18 +19,18 @@ public class WalletService {
 
     private final WalletRepository walletRepository;
 
-    public WalletRest createNewWallet(WalletRest customerRest) throws WalletAlreadyExistsException {
+    public WalletRest createNewWallet(WalletRest walletRest) throws WalletAlreadyExistsException {
         final Wallet wallet = new Wallet();
 
-        wallet.setCustomerId(customerRest.getCustomerId());
-        wallet.setWalletName(customerRest.getWalletName());
-        wallet.setCash(Double.parseDouble("10000.00"));
-        wallet.setDescription(customerRest.getDescription());
-        wallet.setCustomerId(customerRest.getCustomerId());
+        wallet.setCustomerId(walletRest.getCustomerId());
+        wallet.setWalletName(walletRest.getWalletName());
+        wallet.setCash(walletRest.getCash());
+        wallet.setDescription(walletRest.getDescription());
+        wallet.setCustomerId(walletRest.getCustomerId());
         wallet.setId(UUID.randomUUID().toString());
 
 
-        wallet.setCards(customerRest.getCards().stream().map(c -> Card.builder()
+        wallet.setCards(walletRest.getCards().stream().map(c -> Card.builder()
                 .id(UUID.randomUUID().toString())
                 .cvc(c.getCvc())
                 .expire(c.getExpire())
@@ -42,9 +42,9 @@ public class WalletService {
 
         walletRepository.save(wallet);
 
-        customerRest.setId(UUID.fromString(wallet.getId()));
+        walletRest.setId(UUID.fromString(wallet.getId()));
 
-        return customerRest;
+        return walletRest;
     }
 
     public WalletRest findWalletById(String id) {

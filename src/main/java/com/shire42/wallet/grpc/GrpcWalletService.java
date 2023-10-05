@@ -5,13 +5,16 @@ import br.com.shire42.wallet.ProtoWallet;
 import br.com.shire42.wallet.ProtoWalletList;
 import br.com.shire42.wallet.WalletRequest;
 import br.com.shire42.wallet.WalletServiceGrpc;
+import com.shire42.wallet.controller.rest.CardRest;
 import com.shire42.wallet.controller.rest.WalletRest;
+import com.shire42.wallet.exception.WalletAlreadyExistsException;
 import com.shire42.wallet.service.WalletService;
 import io.grpc.stub.StreamObserver;
 import lombok.AllArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -52,7 +55,28 @@ public class GrpcWalletService extends WalletServiceGrpc.WalletServiceImplBase {
 
     @Override
     public void saveNewWallet(ProtoWallet request, StreamObserver<ProtoWallet> responseObserver) {
-        super.saveNewWallet(request, responseObserver);
+        try {
+            walletService.createNewWallet(WalletRest.builder()
+                    .walletName(request.getWalletName())
+                    .cash(request.getCash())
+                    .customerId(request.getCustomerId())
+                    .description(request.getDescription())
+                    .cards(request.getCardsList().stream().map(c -> {
+                        return CardRest.builder()
+                                .cvc(c.getCvc())
+                                .expire(c.getExpire())
+                                .holderName(c.getHolderName())
+                                .number(c.getNumber())
+                                .build();
+                    }).toList()
+                ).build()
+            );
+
+            responseObserver.onNext(null);
+            responseObserver.onCompleted();
+        } catch (WalletAlreadyExistsException e) {
+            responseObserver.onError(new Exception("Error on try to save a new wallet"));
+        }
     }
 
 }
