@@ -5,8 +5,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+
+import java.util.List;
+import java.util.Map;
+
+import static software.amazon.awssdk.enhanced.dynamodb.internal.AttributeValues.stringValue;
 
 @AllArgsConstructor
 @Repository
@@ -24,6 +32,23 @@ public class WalletRepository {
                 Key.builder()
                 .partitionValue(id)
                 .build());
+    }
+
+    public List<Wallet> findByCustomerId(String customerId) {
+        final Map<String, AttributeValue> params = Map.of(":customerId", stringValue(customerId));
+
+        final Expression expression = Expression.builder()
+                .expression("customerId = :customerId")
+                .expressionValues(params)
+                .build();
+
+        final ScanEnhancedRequest request = ScanEnhancedRequest.builder()
+                .consistentRead(true)
+                .attributesToProject("id", "customerId", "walletName", "description", "cash", "cards")
+                .filterExpression(expression)
+                .build();
+
+        return getTable().scan(request).items().stream().toList();
     }
 
     private DynamoDbTable<Wallet> getTable() {

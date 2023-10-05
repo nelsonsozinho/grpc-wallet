@@ -30,7 +30,7 @@ public class Wallet {
     }
 
     @DynamoDbSortKey
-    @DynamoDbAttribute("wallet-name")
+    @DynamoDbAttribute("walletName")
     public String getWalletName() {
         return walletName;
     }
@@ -39,7 +39,7 @@ public class Wallet {
         this.walletName = walletName;
     }
 
-    @DynamoDbAttribute("customer-id")
+    @DynamoDbAttribute("customerId")
     public String getCustomerId() {
         return customerId;
     }

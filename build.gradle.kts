@@ -60,7 +60,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("software.amazon.awssdk:dynamodb-enhanced:2.20.153")
-	implementation("br.com.shire42:proto-service:1.0.2")
+	implementation("br.com.shire42:proto-service:1.0.7")
 
 	implementation("io.grpc:grpc-stub:$grpcVersion")
 	implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
